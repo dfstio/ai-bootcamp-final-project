@@ -4,6 +4,7 @@ import type { AiData } from "../model/aiData";
 import { description } from "./context";
 import callLambda from "../lambda/lambda";
 import { getVoice, setVoice } from "../lang/lang";
+import { getPivotPoints } from "./pivot";
 
 const FILES_TABLE = process.env.FILES_TABLE!;
 
@@ -14,6 +15,14 @@ const aiFunctions = {
       name: "description",
       description:
         "Get the description of the @btc_price_ai_bot bot and its features",
+    },
+  },
+  pivot_points: {
+    type: "function",
+    function: {
+      name: "pivot_points",
+      description:
+        "Get the Pivot Points of BTC/USD for different time periods from the current time: 1 minute, 5 minutes, 15 minutes, 30 minutes, 1 hour, 5 hours, 1 day, 1 week, 1 month. Those pivot points are used to predict the future price of BTC/USD",
     },
   },
   current_date_and_time: {
@@ -84,6 +93,7 @@ async function getAIfunctions(id: string): Promise<any[]> {
   functions.push(aiFunctions.get_voice);
   functions.push(aiFunctions.set_voice);
   functions.push(aiFunctions.current_date_and_time);
+  functions.push(aiFunctions.pivot_points);
 
   return functions;
 }
@@ -98,6 +108,13 @@ async function getDescription(): Promise<AiData> {
 async function getCurrentDateAndTime(): Promise<AiData> {
   return <AiData>{
     answer: new Date().toUTCString(),
+    needsPostProcessing: false,
+  };
+}
+
+async function pivotPoints(): Promise<AiData> {
+  return <AiData>{
+    answer: JSON.stringify({ pivotPoints: await getPivotPoints() }),
     needsPostProcessing: false,
   };
 }
@@ -173,6 +190,8 @@ async function aiTool(id: string, tool: any, language: string) {
       return await set_voice(id, request);
     case "current_date_and_time":
       return await getCurrentDateAndTime();
+    case "pivot_points":
+      return await pivotPoints();
     default:
       console.error("ChatGPT aiTool - wrong function name", name);
       return <AiData>{

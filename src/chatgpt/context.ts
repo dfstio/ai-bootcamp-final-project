@@ -1,4 +1,4 @@
-const context: string = `@btc_price_ai_bot BTC price predictions AI telegram bot`;
+const context: string = `@btc_price_ai_bot BTC price predictions: AI telegram bot using pivot points and technical analysis`;
 const description: string = `
 I can answer the questions about the current and future price of BTC/USD.
 To analyze the future price of BTC/USD, I use the historical data of the BTC/USD price, the current market trends, and the technical analysis that most of the BTC/USD traders in the world use.

@@ -122,11 +122,11 @@ functions:
   ask:
     handler: ask.chatgpt
     timeout: 900
-    memorySize: 256
+    memorySize: 3008
   image:
     handler: ask.image
     timeout: 900
-    memorySize: 512
+    memorySize: 3008
   audio:
     handler: audio.transcribe
     timeout: 900

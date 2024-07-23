@@ -5,7 +5,7 @@ import type { AiData } from "../model/aiData";
 import Users from "../table/users";
 import History from "../table/history";
 import { aiTool, aiPostProcess } from "./functions";
-import { archetypes, dalle } from "./archetypes";
+
 const HISTORY_TABLE = process.env.HISTORY_TABLE!;
 
 export default class ChatGPTMessage {
@@ -193,82 +193,21 @@ export default class ChatGPTMessage {
       answerType: "text",
       text: errorMsg,
     };
-    let prompt: string = msg.substring(0, 999);
+    let prompt: string = msg.substring(0, 3999);
     let fullPrompt: string = msg;
-
-    if (ai === false) {
-      const art: string = isArchetype ? dalle : archetypes;
-      const messages: any[] = [
-        {
-          role: "system",
-          content: art,
-        },
-        {
-          role: "user",
-          content: msg,
-        },
-      ];
-
-      try {
-        const completion = await this.api.chat.completions.create({
-          model: "gpt-4o", // "gpt-3.5-turbo"
-          messages,
-          user: id,
-        });
-        console.log(
-          "ChatGPT image prompt",
-          completion.choices[0].message?.content
-        );
-        if (
-          completion?.choices[0]?.message?.content !== undefined &&
-          completion?.choices[0]?.message?.content !== null
-        ) {
-          fullPrompt = completion.choices[0].message.content;
-          prompt = completion.choices[0].message.content.substring(0, 999);
-        }
-        await users.updateUsage(id, completion.usage as AIUsage);
-        if (isArchetype && fullPrompt.length > 999) {
-          const completion = await this.api.chat.completions.create({
-            model: "gpt-4o",
-            messages: [
-              {
-                role: "system",
-                content:
-                  "Maximum size of description should be strictly 1000 characters. Do not provide description with the size more than 1000 characters. Please shorten the user input so it would be not more than 1000 characters",
-              },
-              {
-                role: "user",
-                content: fullPrompt,
-              },
-            ],
-            user: id,
-          });
-          if (
-            completion?.choices[0]?.message?.content !== undefined &&
-            completion?.choices[0]?.message?.content !== null &&
-            completion?.usage !== undefined
-          ) {
-            prompt = completion.choices[0].message.content.substring(0, 999);
-            await users.updateUsage(id, completion.usage as AIUsage);
-          }
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    //console.log("Image prompt:", prompt);
-    //console.log("Image full prompt:", fullPrompt);
     let imageUrl = "";
 
     try {
-      const imageParams = {
+      console.log("Image prompt:", prompt);
+      const image = await this.api.images.generate({
         model: "dall-e-3",
         n: 1,
         prompt,
         user: id,
-      };
-
-      const image = await this.api.images.generate(imageParams);
+        size: "1792x1024",
+        style: "natural",
+        quality: "hd",
+      });
       if (image?.data[0]?.url !== undefined) imageUrl = image.data[0].url;
       await users.updateImageUsage(id);
       //console.log("Image result", imageUrl, image.data);

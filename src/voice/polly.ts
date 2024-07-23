@@ -46,7 +46,7 @@ export async function textToVoice(
       OutputS3BucketName: process.env.BUCKET!,
       Text: text,
       TextType: "text",
-      OutputS3KeyPrefix: "minanft-" + language + "-" + id,
+      OutputS3KeyPrefix: "btc-ai-bot-" + language + "-" + id,
       VoiceId: voiceId,
     };
 

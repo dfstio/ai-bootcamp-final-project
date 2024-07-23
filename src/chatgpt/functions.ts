@@ -22,7 +22,7 @@ const aiFunctions = {
     function: {
       name: "pivot_points",
       description:
-        "Get the Pivot Points of BTC/USD for different time periods from the current time: 1 minute, 5 minutes, 15 minutes, 30 minutes, 1 hour, 5 hours, 1 day, 1 week, 1 month. Those pivot points are used to predict the future price of BTC/USD",
+        "Get the Technical Indicators and Pivot Points of BTC/USD for different time periods from the current time: 1 minute, 5 minutes, 15 minutes, 30 minutes, 1 hour, 5 hours, 1 day, 1 week, 1 month. Those pivot points are used to predict the future price of BTC/USD",
     },
   },
   current_date_and_time: {

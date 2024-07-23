@@ -5,7 +5,7 @@ import type { AiData } from "../model/aiData";
 import Users from "../table/users";
 import History from "../table/history";
 import { aiTool, aiPostProcess } from "./functions";
-import { archetypes, midjourney, dalle } from "./archetypes";
+import { archetypes, dalle } from "./archetypes";
 const HISTORY_TABLE = process.env.HISTORY_TABLE!;
 
 export default class ChatGPTMessage {
@@ -288,7 +288,7 @@ export default class ChatGPTMessage {
     return <ImageGPT>{
       image: imageUrl,
       answerType: "image",
-      text: isArchetype ? midjourney + fullPrompt : prompt,
+      text: prompt,
     };
   }
 }

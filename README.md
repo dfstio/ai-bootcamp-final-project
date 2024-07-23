@@ -11,3 +11,14 @@ curl \
  --url https://api.telegram.org/bot botToken/setWebhook \
  --header 'content-type: application/json' \
  --data '{"url": "API gateway domain/function"}'
+
+
+# Team
+Group 12 
+
+## Member IDs
+FLiJp8
+
+MobZbC
+
+iUXCUk

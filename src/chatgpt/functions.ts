@@ -5,6 +5,14 @@ import { description } from "./context";
 import callLambda from "../lambda/lambda";
 import { getVoice, setVoice } from "../lang/lang";
 import { getPivotPoints } from "./pivot";
+import axios from "axios";
+
+const COINGECKO_API_URL =
+  "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd";
+
+const NEWS_API_URL =
+  "https://newsapi.org/v2/everything?q=bitcoin&sortBy=publishedAt&apiKey=" +
+  process.env.NEWS_API_KEY;
 
 const FILES_TABLE = process.env.FILES_TABLE!;
 
@@ -277,4 +285,35 @@ function getFormattedDateTime(time: number): string {
   return `${year}.${month}.${day}-${hours}.${minutes}.${seconds}`;
 }
 
-export { getAIfunctions, aiTool, aiPostProcess };
+async function fetchBTCPrice() {
+  try {
+    const response = await axios.get(COINGECKO_API_URL);
+    const price = response.data.bitcoin.usd;
+    console.log(`Current BTC price: $${price}`);
+    return price;
+  } catch (error) {
+    console.error("Error fetching BTC price:", error);
+    throw error;
+  }
+}
+
+async function fetchBTCNews() {
+  try {
+    const response = await axios.get(NEWS_API_URL);
+    const articles = response.data.articles;
+    console.log("Recent BTC news articles:");
+    articles.forEach((article: any, index: number) => {
+      console.log(`${index + 1}. ${article.title}`);
+      console.log(`   Source: ${article.source.name}`);
+      console.log(`   Published At: ${article.publishedAt}`);
+      console.log(`   URL: ${article.url}`);
+      console.log("");
+    });
+    return articles;
+  } catch (error) {
+    console.error("Error fetching BTC news:", error);
+    throw error;
+  }
+}
+
+export { getAIfunctions, aiTool, aiPostProcess, fetchBTCPrice, fetchBTCNews };

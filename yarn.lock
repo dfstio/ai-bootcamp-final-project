@@ -2142,9 +2142,9 @@ __metadata:
   linkType: hard
 
 "@types/aws-lambda@npm:^8.10.141":
-  version: 8.10.141
-  resolution: "@types/aws-lambda@npm:8.10.141"
-  checksum: 10c0/cb82807c0feee91702321ae492ae24023e05b461f91e155d1ade60a40af779067dd7631bd70f97f8ae4cf107aaa03286db0093694184c79f314edb38f1bfa250
+  version: 8.10.142
+  resolution: "@types/aws-lambda@npm:8.10.142"
+  checksum: 10c0/9c9544d0f93bb8e1c044cd9d991c5c11d04c4a98d3b2dfade7d420df56270288baa254ec2d9782144ec7291d154c0dd550862f133ba81cca12a28af9f5349414
   languageName: node
   linkType: hard
 
@@ -2245,20 +2245,20 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^20.14.11":
-  version: 20.14.11
-  resolution: "@types/node@npm:20.14.11"
+  version: 20.14.12
+  resolution: "@types/node@npm:20.14.12"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/5306becc0ff41d81b1e31524bd376e958d0741d1ce892dffd586b9ae0cb6553c62b0d62abd16da8bea6b9a2c17572d360450535d7c073794b0cef9cb4e39691e
+  checksum: 10c0/59bc5fa11fdd23fd517f859063118f54a1ab53d3399ef63c926f8902429d7453abc0db22ef4b0a6110026b6ab81b6472fee894e1d235c24b01a0b3e10cfae0bb
   languageName: node
   linkType: hard
 
 "@types/node@npm:^18.11.18":
-  version: 18.19.41
-  resolution: "@types/node@npm:18.19.41"
+  version: 18.19.42
+  resolution: "@types/node@npm:18.19.42"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/fc078939cdec05ca60c557bff55d8d96c8e5695e925ee144d8c67efcd9717ed1ec1e18a476257f2dcc8382d1158dae22b24a423ef3cb833ff9f441a80e80c0e6
+  checksum: 10c0/eaacbbcb376748bddaf6cd04569ebf3f0069a1b6f821db4f85ef9f60c2c63608ddcaf3e67a3c44e1cd8111a26e9da7c83d54ae7c41dd21e7b35cbab9436bfe1e
   languageName: node
   linkType: hard
 
@@ -2608,8 +2608,8 @@ __metadata:
   linkType: hard
 
 "aws-sdk@npm:^2.1404.0":
-  version: 2.1661.0
-  resolution: "aws-sdk@npm:2.1661.0"
+  version: 2.1662.0
+  resolution: "aws-sdk@npm:2.1662.0"
   dependencies:
     buffer: "npm:4.9.2"
     events: "npm:1.1.1"
@@ -2621,7 +2621,7 @@ __metadata:
     util: "npm:^0.12.4"
     uuid: "npm:8.0.0"
     xml2js: "npm:0.6.2"
-  checksum: 10c0/dd7525113f6b05466df70bf82c924860236641e794a8f626a751f37d457d47710bce010fbc76b8510e398d08c90f773ebd618338c30405aec7d9b9143daee652
+  checksum: 10c0/1c6f62f6f10705aa85662f8ab15a3bea08bb8f2e769f0430d385cdc83d9c7d4495424b2fc3f8fdee3e9f5765d7b0ad04ee463f814c46314a402ccda5ffa04970
   languageName: node
   linkType: hard
 

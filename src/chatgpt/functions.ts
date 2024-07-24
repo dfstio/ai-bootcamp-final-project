@@ -4,7 +4,7 @@ import type { AiData } from "../model/aiData";
 import { description } from "./context";
 import callLambda from "../lambda/lambda";
 import { getVoice, setVoice } from "../lang/lang";
-import { getPivotPoints } from "./pivot";
+import { getPivotPoints, getHistoricalPrices } from "./pivot";
 import axios from "axios";
 
 const COINGECKO_API_URL =
@@ -30,7 +30,7 @@ const aiFunctions = {
     function: {
       name: "pivot_points",
       description:
-        "Get the Technical Indicators and Pivot Points of BTC/USD for different time periods from the current time: 1 minute, 5 minutes, 15 minutes, 30 minutes, 1 hour, 5 hours, 1 day, 1 week, 1 month. Those pivot points are used to predict the future price of BTC/USD",
+        "Get the Technical Indicators and Pivot Points of BTC/USD for different time periods in the future from the current time: 1 minute, 5 minutes, 15 minutes, 30 minutes, 1 hour, 5 hours, 1 day, 1 week, 1 month. Those pivot points are used to predict the future price of BTC/USD. This function returns the current date and time and the Pivot Points and the Indicators for the future period. Do not use this function when the users asks about the prices of BTC in the past.",
     },
   },
   current_date_and_time: {
@@ -38,6 +38,29 @@ const aiFunctions = {
     function: {
       name: "current_date_and_time",
       description: "Get the current date and time (UTC time)",
+    },
+  },
+  bitcoin_price: {
+    type: "function",
+    function: {
+      name: "bitcoin_price",
+      description:
+        "Get the current Bitcoin (BTC/USD) price as of now. The price is changing all the time, so you should call this function every time when the current BTC price is needed and do not rely on old function call results",
+    },
+  },
+  bitcoin_historical_prices: {
+    type: "function",
+    function: {
+      name: "bitcoin_historical_prices",
+      description:
+        "Get the historical Bitcoin (BTC/USD) prices. Use this function when the user asks about the BTC prices for the past time periods, for example, for the last 1 hour, 1 day, 1 week, 1 month, etc. Returns current data and time and the information about the BTC/USD prices in the past. Do not use this function when the users asks about the prices of BTC in the future.",
+    },
+  },
+  bitcoin_news: {
+    type: "function",
+    function: {
+      name: "bitcoin_news",
+      description: "Get the current Bitcoin news articles",
     },
   },
   get_voice: {
@@ -122,6 +145,9 @@ async function getAIfunctions(id: string): Promise<any[]> {
   functions.push(aiFunctions.set_voice);
   functions.push(aiFunctions.current_date_and_time);
   functions.push(aiFunctions.pivot_points);
+  functions.push(aiFunctions.bitcoin_price);
+  functions.push(aiFunctions.bitcoin_news);
+  functions.push(aiFunctions.bitcoin_historical_prices);
 
   return functions;
 }
@@ -140,9 +166,77 @@ async function getCurrentDateAndTime(): Promise<AiData> {
   };
 }
 
+async function getBTCPrice(): Promise<AiData> {
+  try {
+    const response = await axios.get(COINGECKO_API_URL);
+    const price = response?.data?.bitcoin?.usd;
+    console.log(`Current BTC price:`, price);
+    if (price === undefined) {
+      return <AiData>{
+        answer: "Error fetching BTC price",
+        needsPostProcessing: false,
+      };
+    } else {
+      return <AiData>{
+        answer: `Current BTC price: ${price}`,
+        needsPostProcessing: false,
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching BTC price:", error);
+    return <AiData>{
+      answer: "Error fetching BTC price",
+      needsPostProcessing: false,
+    };
+  }
+}
+
+async function getBTCNews(): Promise<AiData> {
+  try {
+    const response = await axios.get(NEWS_API_URL);
+    const articles = response?.data?.articles;
+    console.log("Recent BTC news articles:");
+    /*
+    articles.forEach((article: any, index: number) => {
+      console.log(`${index + 1}. ${article?.title}`);
+      console.log(`   Source: ${article?.source?.name}`);
+      console.log(`   Published At: ${article?.publishedAt}`);
+      console.log(`   URL: ${article?.url}`);
+      console.log("");
+    });
+    */
+    if (articles && articles?.length && articles.length !== 0) {
+      console.log("Recent BTC news articles:", articles.length);
+      return <AiData>{
+        answer: JSON.stringify({ articles }),
+        needsPostProcessing: false,
+      };
+    } else {
+      console.error("Error fetching BTC news: no articles");
+      return <AiData>{
+        answer: "Error fetching recent BTC news articles",
+        needsPostProcessing: false,
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching BTC news:", error);
+    return <AiData>{
+      answer: "Error fetching recent BTC news articles",
+      needsPostProcessing: false,
+    };
+  }
+}
+
 async function pivotPoints(): Promise<AiData> {
   return <AiData>{
     answer: JSON.stringify({ pivotPoints: await getPivotPoints() }),
+    needsPostProcessing: false,
+  };
+}
+
+async function historicalPrices(): Promise<AiData> {
+  return <AiData>{
+    answer: JSON.stringify({ historicalPrices: await getHistoricalPrices() }),
     needsPostProcessing: false,
   };
 }
@@ -220,6 +314,12 @@ async function aiTool(id: string, tool: any, language: string) {
       return await getCurrentDateAndTime();
     case "pivot_points":
       return await pivotPoints();
+    case "bitcoin_historical_prices":
+      return await historicalPrices();
+    case "bitcoin_price":
+      return await getBTCPrice();
+    case "bitcoin_news":
+      return await getBTCNews();
     default:
       console.error("ChatGPT aiTool - wrong function name", name);
       return <AiData>{
@@ -285,35 +385,4 @@ function getFormattedDateTime(time: number): string {
   return `${year}.${month}.${day}-${hours}.${minutes}.${seconds}`;
 }
 
-async function fetchBTCPrice() {
-  try {
-    const response = await axios.get(COINGECKO_API_URL);
-    const price = response.data.bitcoin.usd;
-    console.log(`Current BTC price: $${price}`);
-    return price;
-  } catch (error) {
-    console.error("Error fetching BTC price:", error);
-    throw error;
-  }
-}
-
-async function fetchBTCNews() {
-  try {
-    const response = await axios.get(NEWS_API_URL);
-    const articles = response.data.articles;
-    console.log("Recent BTC news articles:");
-    articles.forEach((article: any, index: number) => {
-      console.log(`${index + 1}. ${article.title}`);
-      console.log(`   Source: ${article.source.name}`);
-      console.log(`   Published At: ${article.publishedAt}`);
-      console.log(`   URL: ${article.url}`);
-      console.log("");
-    });
-    return articles;
-  } catch (error) {
-    console.error("Error fetching BTC news:", error);
-    throw error;
-  }
-}
-
-export { getAIfunctions, aiTool, aiPostProcess, fetchBTCPrice, fetchBTCNews };
+export { getAIfunctions, aiTool, aiPostProcess };

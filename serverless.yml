@@ -30,6 +30,7 @@ provider:
     BOTAPIAUTH: ${file(./env.json):BOTAPIAUTH, env:BOTAPIAUTH}
     CHATGPTPLUGINAUTH: ${file(./env.json):CHATGPTPLUGINAUTH, env:CHATGPTPLUGINAUTH}
     STORAGE_URL: ${file(./env.json):STORAGE_URL, env:STORAGE_URL}
+    NEWS_API_KEY: ${file(./env.json):NEWS_API_KEY, env:NEWS_API_KEY}
   iamRoleStatements:
     - Effect: "Allow"
       Action:

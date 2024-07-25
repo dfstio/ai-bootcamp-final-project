@@ -4,7 +4,7 @@
   "salutationWithNames": "Hello {{firstName}} {{lastName}}!",
   "commonError": "Unfortunately, an error occurred",
   "commonLongStringError": "Unfortunately, an error occurred. The field should have no more than 300 characters",
-  "welcomeWords": "Welcome to nullaosta bot!",
+  "welcomeWords": "Welcome to BTC AI price predictions bot!",
   "finalWords": "Thank you! Your NFT is being created and will be deployed to the MINA blockchain. In the meantime, you can ask me questions about Mina NFT, and I will answer with the help of AI",
   "afterFinalWords": "Thank you for the additional information!",
   "typeError": "Sorry, but I do not support this file type. I accept: pdf, doc, docx, odt, and txt. Also, the file should be no more than 15 Mb",

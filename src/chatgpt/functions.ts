@@ -96,6 +96,7 @@ const aiFunctions = {
       },
     },
   },
+  /*
   generate_image: {
     type: "function",
     function: {
@@ -134,11 +135,12 @@ is drawn, the max and min price of the BTC/USD on this chart, and the resistance
       },
     },
   },
+  */
 };
 
 async function getAIfunctions(id: string): Promise<any[]> {
   const functions = [];
-  functions.push(aiFunctions.generate_image);
+  //functions.push(aiFunctions.generate_image);
   functions.push(aiFunctions.list_files);
   functions.push(aiFunctions.description);
   functions.push(aiFunctions.get_voice);
